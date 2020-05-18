@@ -1,4 +1,4 @@
-package com.flamexander.netty.example.proto_file;
+package com.flamexander.netty.example.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

@@ -1,8 +1,6 @@
 package com.flamexander.netty.example.client;
 
-import com.flamexander.netty.example.common.AbstractMessage;
-import com.flamexander.netty.example.common.FileMessage;
-import com.flamexander.netty.example.common.FileRequest;
+import com.flamexander.netty.example.server.Filer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,70 +12,83 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ResourceBundle;
+import java.util.concurrent.CountDownLatch;
 
 public class MainController implements Initializable {
     @FXML
     TextField tfFileName;
 
-
     @FXML
     ListView<String> filesList;
     @FXML
-    ListView<String> filesList1;
+      ListView<String> filesList1;
+    public ListView<String> getFilesList1(){
+        return filesList1;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Network.start();
-        Thread t = new Thread(() -> {
-            try {
-                while (true) {
-                    AbstractMessage am = Network.readObject();    //  блокируется до получения
-                    if (am instanceof FileMessage) {
-                        FileMessage fm = (FileMessage) am;
-                        Files.write(Paths.get("client_storage/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
-                        refreshLocalFilesList();
 
-                    }
-                    if (am instanceof FileRequest) {
-                        System.out.println(((FileRequest) am).getFilename()+" <обратное сообщение");
-                    }
-                    refreshLocalFilesList1();
-                }
-            } catch (ClassNotFoundException | IOException e) {
-                e.printStackTrace();
-            } finally {
-                Network.stop();
-            }
-        });
-        t.setDaemon(true);
-        t.start();
+
+        CountDownLatch networkStarter = new CountDownLatch(1);
+        new Thread(() -> ByteNetwork.getInstance().start(networkStarter)).start();
+        try {
+            networkStarter.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         refreshLocalFilesList();
         refreshLocalFilesList1();
     }
 
-    public void pressOnDownloadBtn(ActionEvent actionEvent) {
-        if (tfFileName.getLength() > 0) {
-            Network.sendMsg(new FileRequest(tfFileName.getText()));
-            tfFileName.clear();
-        }
-    }
-    public void pressOnDownloadBtn1(ActionEvent actionEvent) throws IOException {
+
+
+    public void pressOnDownloadBtnSend(ActionEvent actionEvent) throws IOException {
         if (tfFileName.getLength() > 0) {
 
-            if (Files.exists(Paths.get("client_storage/" + tfFileName.getText()))) {
-                FileMessage fm = new FileMessage(Paths.get("client_storage/" + tfFileName.getText()));
-                System.out.println(fm.getFilename());
-                Network.sendMsg(fm);
+            if (Files.exists(Paths.get("client_storage/" +tfFileName.getText()) )) {
+                ClientFiler.sendFile(Paths.get("client_storage/",tfFileName.getText()),
+                        ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                    if (!future.isSuccess()) {
+                        future.cause().printStackTrace();
+//                Network.getInstance().stop();
+                    }
+                    if (future.isSuccess()) {
+                        System.out.println("Файл успешно передан с клиента");
+//                Network.getInstance().stop();
+                    }
+                });
+
                 tfFileName.clear();
 
-                System.out.println("Button 1 works");
+                System.out.println("Button Send works");
             }
         }
     }
+    public void pressOnDownloadBtnGet(ActionEvent actionEvent) throws IOException {
+        if (tfFileName.getLength() > 0) {
+
+            if (Files.exists(Paths.get("server_storage/" +tfFileName.getText()) )) {
+                Filer.sendFile(Paths.get("server_storage/",tfFileName.getText()),
+                        ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                            if (!future.isSuccess()) {
+                                future.cause().printStackTrace();
+
+                            }
+                            if (future.isSuccess()) {
+                                System.out.println("Файл успешно передан с сервера");
+
+                            }
+                        });
 
 
+                tfFileName.clear();
+
+                System.out.println("Button Get works");
+            }
+        }
+    }
 
     public void refreshLocalFilesList() {
         Platform.runLater(() -> {
@@ -105,5 +116,6 @@ public class MainController implements Initializable {
             }
         });
     }
+
 
 }
