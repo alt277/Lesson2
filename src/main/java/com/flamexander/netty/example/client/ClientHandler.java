@@ -26,7 +26,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         if (readed ==SIGNAL_BYTE_FILE )
             ClientFiler.writeFile(buf);
 
-        if (readed == SIGNAL_BYTE_GET_MESSAGE) {} // пока заглушка
+        if (readed == SIGNAL_BYTE_GET_MESSAGE) { }  // пока заглушка
 
 
 

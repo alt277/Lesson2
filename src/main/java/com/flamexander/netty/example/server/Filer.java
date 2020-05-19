@@ -81,7 +81,7 @@ public class Filer {
     public static void sendFile(Path path, Channel channel, ChannelFutureListener finishListener) throws IOException {
 
         FileRegion region = new DefaultFileRegion(path.toFile(), 0, Files.size(path));
-
+        //  пишем файл по указанному пути         с нулевой позиции  сколько: по размеру файла по этому пути
         ByteBuf buf = null;
         buf = ByteBufAllocator.DEFAULT.directBuffer(1);
         buf.writeByte(SIGNAL_BYTE_FILE);
@@ -97,14 +97,14 @@ public class Filer {
         channel.writeAndFlush(buf);
 
         buf = ByteBufAllocator.DEFAULT.directBuffer(8);
-        buf.writeLong(Files.size(path));
+        buf.writeLong(Files.size(path));  // размер файла по этому пути
         channel.writeAndFlush(buf);
 
         ChannelFuture transferOperationFuture = channel.writeAndFlush(region);
         if (finishListener != null) {
             transferOperationFuture.addListener(finishListener);
-        }                          /*            channelFutureListener finishListener
-                                                 передан в аргументах метода             */
+        }                                /*      channelFutureListener finishListener
+                                                 передан в аргументах метода ( callback )   */
     }
 
 

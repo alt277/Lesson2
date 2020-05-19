@@ -49,8 +49,7 @@ public class ClientFiler {
                     byte[] fileName = new byte[nextLength];
                     buf.readBytes(fileName);
                     System.out.println("STATE: Filename received:" + new String(fileName, "UTF-8"));
-
-                    out = new BufferedOutputStream(new FileOutputStream( new String(fileName)));
+                    out = new BufferedOutputStream(new FileOutputStream( "client_storage/"+ new String(fileName)));
                     currentState = Filer.State.FILE_LENGTH;
                 }                              // создали путь куда писать    -направили трубу
             }

@@ -23,9 +23,10 @@ public class ProtoHandler extends ChannelInboundHandlerAdapter {
         if (readed ==SIGNAL_BYTE_FILE )
             Filer.writeFile(buf);
 
-        if (readed == (byte) 20)
-            Commander.sendFile(buf);
+        if (readed == SIGNAL_BYTE_GET_MESSAGE) {
 
+            Commander.sendFile(buf);
+        }
 //        if (buf.readableBytes() == 0) {
 //
 //            buf.release();                       //   и чистим  буфер
