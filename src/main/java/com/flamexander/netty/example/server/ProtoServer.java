@@ -1,6 +1,7 @@
 package com.flamexander.netty.example.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -9,6 +10,12 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ProtoServer {
+
+//    private static Channel currentChannel;
+//    public static Channel getCurrentChannel() {
+//        return currentChannel;
+//    }
+
     public void run() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -18,12 +25,14 @@ public class ProtoServer {
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                         @Override
-                        public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ProtoHandler());
+                        public void initChannel(SocketChannel channel) throws Exception {
+                            channel.pipeline().addLast(new ProtoHandler());
+   //                         currentChannel=channel;
                         }
                     });
                     // .childOption(ChannelOption.SO_KEEPALIVE, true);
             ChannelFuture f = b.bind(8182).sync();
+
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

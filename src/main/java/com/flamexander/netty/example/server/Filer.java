@@ -99,12 +99,14 @@ public class Filer {
         buf = ByteBufAllocator.DEFAULT.directBuffer(8);
         buf.writeLong(Files.size(path));  // размер файла по этому пути
         channel.writeAndFlush(buf);
-
+                                               // отправляем файл,делая это событием
         ChannelFuture transferOperationFuture = channel.writeAndFlush(region);
+                // и  добавляем слушателя к событию  отправки:
         if (finishListener != null) {
             transferOperationFuture.addListener(finishListener);
-        }                                /*      channelFutureListener finishListener
-                                                 передан в аргументах метода ( callback )   */
+        }
+                                                /* channelFutureListener finishListener
+                                                передан в аргументах метода ( callback ) */
     }
 
 

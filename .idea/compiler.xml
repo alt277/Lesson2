@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="netty-file-transfer-lesson1" />
-        <module name="netty-proto-ST - 2" />
         <module name="netty-proto-ST - 3" />
+        <module name="netty-proto-ST - 2" />
         <module name="netty-serial_STW" />
+        <module name="netty-proto-ST - 4" />
         <module name="netty-proto-ST" />
+        <module name="netty-file-transfer-lesson1" />
         <module name="netty-file-transfer" />
         <module name="netty-serial_STW -2" />
       </profile>

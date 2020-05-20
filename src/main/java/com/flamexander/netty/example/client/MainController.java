@@ -48,7 +48,7 @@ public class MainController implements Initializable {
         if (tfFileName.getLength() > 0) {
 
             if (Files.exists(Paths.get("client_storage/" +tfFileName.getText()) )) {
-                ClientFiler.sendFile(Paths.get("client_storage/",tfFileName.getText()),
+                ClientFiler.sendFile(Paths.get("client_storage/"+tfFileName.getText()),
                         ByteNetwork.getInstance().getCurrentChannel(), future -> {
                     if (!future.isSuccess()) {
                         future.cause().printStackTrace();
@@ -70,7 +70,7 @@ public class MainController implements Initializable {
         if (tfFileName.getLength() > 0) {
 
             if (Files.exists(Paths.get("server_storage/" +tfFileName.getText()) )) {
-                Filer.sendFile(Paths.get("server_storage/",tfFileName.getText()),
+                Filer.sendFile(Paths.get("server_storage/"+tfFileName.getText()),
                         ByteNetwork.getInstance().getCurrentChannel(), future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
