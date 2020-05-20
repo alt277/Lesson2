@@ -1,4 +1,4 @@
-package com.flamexander.netty.example.proto_file;
+package com.flamexander.netty.example.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -37,7 +37,7 @@ public class ByteNetwork {
                     .remoteAddress(new InetSocketAddress("localhost", 8182))
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast();
+                            socketChannel.pipeline().addLast(new ClientHandler());
                             currentChannel = socketChannel;
                         }
                     });
