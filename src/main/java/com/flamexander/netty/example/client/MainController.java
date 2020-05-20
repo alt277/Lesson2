@@ -74,7 +74,6 @@ public class MainController implements Initializable {
                         ByteNetwork.getInstance().getCurrentChannel(), future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
-
                             }
                             if (future.isSuccess()) {
                                 System.out.println("Файл успешно передан с сервера");
