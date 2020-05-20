@@ -1,6 +1,8 @@
 package com.flamexander.netty.example.client;
 
 import com.flamexander.netty.example.server.Filer;
+import com.flamexander.netty.example.server.ProtoHandler;
+import com.flamexander.netty.example.server.ProtoServer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,24 +73,21 @@ public class MainController implements Initializable {
 
             if (Files.exists(Paths.get("server_storage/" +tfFileName.getText()) )) {
                 Filer.sendFile(Paths.get("server_storage/"+tfFileName.getText()),
-                        ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                        ProtoServer.getCurrentChannel(), future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
+
                             }
                             if (future.isSuccess()) {
                                 System.out.println("Файл успешно передан с сервера");
 
                             }
                         });
-
-
                 tfFileName.clear();
-
                 System.out.println("Button Get works");
             }
         }
     }
-
     public void refreshLocalFilesList() {
         Platform.runLater(() -> {
             try {
