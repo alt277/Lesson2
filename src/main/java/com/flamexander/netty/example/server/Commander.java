@@ -1,9 +1,7 @@
 package com.flamexander.netty.example.server;
 
 import com.flamexander.netty.example.client.ByteNetwork;
-import com.flamexander.netty.example.client.ClientFiler;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 
 import java.io.*;
 import java.nio.file.Files;

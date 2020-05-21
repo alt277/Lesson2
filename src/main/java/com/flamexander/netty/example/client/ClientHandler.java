@@ -87,6 +87,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();
+        System.out.println(" ошибки при передаче в хендлере клиента");
     }
 
 

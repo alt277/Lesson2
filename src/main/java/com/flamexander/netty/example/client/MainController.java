@@ -1,8 +1,5 @@
 package com.flamexander.netty.example.client;
 
-import com.flamexander.netty.example.server.Filer;
-import com.flamexander.netty.example.server.ProtoHandler;
-import com.flamexander.netty.example.server.ProtoServer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,43 +47,45 @@ public class MainController implements Initializable {
         if (tfFileName.getLength() > 0) {
 
             if (Files.exists(Paths.get("client_storage/" +tfFileName.getText()) )) {
-                ClientFiler.sendFile(Paths.get("client_storage/"+tfFileName.getText()),
+                ClientSender.sendFileREQ(Paths.get("client_storage/"+tfFileName.getText()),
                         ByteNetwork.getInstance().getCurrentChannel(), future -> {
                     if (!future.isSuccess()) {
                         future.cause().printStackTrace();
 //                Network.getInstance().stop();
                     }
                     if (future.isSuccess()) {
-                        System.out.println("Файл успешно передан с клиента");
+                        System.out.println("Запрос файла передан с клиента"+tfFileName.getText());
 //                Network.getInstance().stop();
                     }
                 });
 
                 tfFileName.clear();
-
                 System.out.println("Button Send works");
+
             }
         }
     }
     public void pressOnDownloadBtnGet(ActionEvent actionEvent) throws IOException {
         if (tfFileName.getLength() > 0) {
 
-            if (Files.exists(Paths.get("server_storage/" +tfFileName.getText()) )) {
-                Filer.sendFile(Paths.get("server_storage/"+tfFileName.getText()),
-                        ProtoServer.getCurrentChannel(), future -> {
+
+                ClientSender.sendFileREQ(Paths.get("server_storage/" + tfFileName.getText()),
+                        ByteNetwork.getInstance().getCurrentChannel(), future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
-
+//                Network.getInstance().stop();
                             }
                             if (future.isSuccess()) {
-                                System.out.println("Файл успешно передан с сервера");
-
+                                System.out.println("Запрос файла передан с клиента" + tfFileName.getText());
+//                Network.getInstance().stop();
                             }
                         });
+
                 tfFileName.clear();
-                System.out.println("Button Get works");
+                System.out.println("Button Send works");
             }
-        }
+
+
     }
     public void refreshLocalFilesList() {
         Platform.runLater(() -> {
