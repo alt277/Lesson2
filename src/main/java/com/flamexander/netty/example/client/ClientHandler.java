@@ -1,15 +1,12 @@
 package com.flamexander.netty.example.client;
 
 
-import com.flamexander.netty.example.server.Commander;
-import com.flamexander.netty.example.server.Filer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     public enum State {
@@ -87,6 +84,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();
+        System.out.println(" ошибки при передаче в хендлере клиента");
     }
 
 
