@@ -8,7 +8,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class Server {
+public class ServerVariant1 {
 
 //    private static Channel currentChannel;
 //    public static Channel getCurrentChannel() {
@@ -40,6 +40,6 @@ public class Server {
     }
 
     public static void main(String[] args) throws Exception {
-        new Server().run();
+        new ServerVariant1().run();
     }
 }

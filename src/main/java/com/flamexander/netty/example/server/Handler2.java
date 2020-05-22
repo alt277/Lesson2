@@ -23,7 +23,7 @@ public class Handler2 extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        Byte [] arr= ( Byte[]) msg;
+        byte [] arr= ( byte[]) msg;
         String FileName=(String)msg;
         if (Files.exists(Paths.get("server_storage/" +FileName ))) {
             Sender.sendFile(Paths.get("server_storage/"+FileName),
