@@ -19,12 +19,12 @@ public class ClientSender {
     private static final byte SIGNAL_BYTE_MESSAGE =20;
     private static final byte SIGNAL_BYTE_FILE=25;
 
-    private static State currentState = State.IDLE;
-    private static int nextLength;
-    private static long fileLength;
-    private static long receivedFileLength;
+    private State currentState = State.IDLE;
+    private  int nextLength;
+    private long fileLength;
+    private  long receivedFileLength;
 
-    private static BufferedOutputStream out;
+    private  BufferedOutputStream out;
 
 
 

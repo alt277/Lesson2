@@ -22,7 +22,7 @@ public class Handler1 extends ChannelInboundHandlerAdapter {
     private long fileLength;
     private long receivedFileLength;
     private BufferedOutputStream out;
-
+    private String name;
                                 // контекст  - вся информация о соединении с клиентом
     @Override                   // ссылка на контекст  +  посылка
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -50,10 +50,15 @@ public class Handler1 extends ChannelInboundHandlerAdapter {
                 if (buf.readableBytes() >= nextLength) {
                     byte[] fileName = new byte[nextLength];
                     buf.readBytes(fileName);
-                    System.out.println("SERVER STATE: Filename received in server: " + new String(fileName, "UTF-8"));
-                    out = new BufferedOutputStream(new FileOutputStream("server_storage/" + new String(fileName)));
-                        if (readed == SIGNAL_BYTE_FILE)
-                         currentState = State.FILE_LENGTH;
+                    name=new String(fileName);
+                    System.out.println("SERVER STATE: Filename received in server: " + name);
+
+//                    System.out.println("SERVER STATE: Filename received in server: " + new String(fileName, "UTF-8"));
+//                    out = new BufferedOutputStream(new FileOutputStream("server_storage/" + new String(fileName)));
+                        if (readed == SIGNAL_BYTE_FILE) {
+                            out = new BufferedOutputStream(new FileOutputStream("server_storage/" + new String(fileName)));
+                            currentState = State.FILE_LENGTH;
+                        }
                         if(readed== SIGNAL_BYTE_MESSAGE) {
                             ctx.fireChannelRead(fileName);  // толкаем дальше
                             currentState = State.IDLE;
@@ -63,13 +68,14 @@ public class Handler1 extends ChannelInboundHandlerAdapter {
             if (currentState == State.FILE_LENGTH) {
                 if (buf.readableBytes() >= 8) {
                     fileLength = buf.readLong();
-                    System.out.println("STATE: File length received - " + fileLength);
+                    System.out.println("Server STATE: File length received - " + fileLength);
                     currentState = State.FILE;
                 }
             }
             if (currentState == State.FILE) {
                 while (buf.readableBytes() > 0) {
                     out.write(buf.readByte());
+                    System.out.println("Out сработал");
                     receivedFileLength++;
                     if (fileLength == receivedFileLength) {
                         currentState = State.IDLE;
@@ -82,8 +88,9 @@ public class Handler1 extends ChannelInboundHandlerAdapter {
         }
         if (buf.readableBytes() == 0) {
            buf.release();
+
         }
-   //     if (readed == SIGNAL_BYTE_GET_MESSAGE){}
+   //
     }
 
 
