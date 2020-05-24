@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="netty-proto-ST - 3" />
         <module name="netty-proto-ST - 2" />
+        <module name="netty-proto-ST - 4 - Copy" />
         <module name="netty-serial_STW" />
         <module name="netty-proto-ST - 4" />
         <module name="netty-proto-ST" />
