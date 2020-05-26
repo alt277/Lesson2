@@ -16,8 +16,17 @@ public class ClientSender {
         IDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE
     }
 
-    private static final byte SIGNAL_BYTE_MESSAGE =20;
+    private static final byte SIGNAL_COMMAND =20;
     private static final byte SIGNAL_BYTE_FILE=25;
+
+
+    private static final String GET_FILE= "GET?";
+    private static String DELETE_FILE= "DEL?";
+    private static String OPEN_ACCESS= "OP/?";
+    private static String CLOSE_ASSESS= "CL/?";
+    private static String SYNCHRONIZE= "SYN";
+
+
 
     private State currentState = State.IDLE;
     private  int nextLength;
@@ -60,10 +69,49 @@ public class ClientSender {
 
         ByteBuf buf = null;
         buf = ByteBufAllocator.DEFAULT.directBuffer(1);
-        buf.writeByte(SIGNAL_BYTE_MESSAGE);
+        buf.writeByte(SIGNAL_COMMAND);
         channel.writeAndFlush(buf);
 
         byte[] filenameBytes = path.getFileName().toString().getBytes(StandardCharsets.UTF_8);
+        buf = ByteBufAllocator.DEFAULT.directBuffer(4);
+        buf.writeInt(filenameBytes.length);
+        channel.writeAndFlush(buf);
+
+        buf = ByteBufAllocator.DEFAULT.directBuffer(filenameBytes.length);
+        buf.writeBytes(filenameBytes);
+//        channel.writeAndFlush(buf);
+        ChannelFuture transferOperationFuture = channel.writeAndFlush(buf);
+        if (finishListener != null) {
+            transferOperationFuture.addListener(finishListener);
+        }
+
+
+    }
+    public static void getFile( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
+          String command=GET_FILE+filename;
+          sendCommand(command,channel,finishListener);
+    }
+    public static void deleteFile( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
+        String command=DELETE_FILE+ filename;
+        sendCommand(command,channel,finishListener);
+    }
+    public static void openAccess( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
+        String command=OPEN_ACCESS+filename;
+        sendCommand(command,channel,finishListener);
+    }
+    public static void closeAccess( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
+        String command=CLOSE_ASSESS+filename;
+        sendCommand(command,channel,finishListener);
+    }
+
+    public static void sendCommand(String command,  Channel channel, ChannelFutureListener finishListener) throws IOException {
+     //  String mes=command+path.getFileName().toString();
+        ByteBuf buf = null;
+        buf = ByteBufAllocator.DEFAULT.directBuffer(1);
+        buf.writeByte(SIGNAL_COMMAND);
+        channel.writeAndFlush(buf);
+
+        byte[] filenameBytes = command.getBytes(StandardCharsets.UTF_8);
         buf = ByteBufAllocator.DEFAULT.directBuffer(4);
         buf.writeInt(filenameBytes.length);
         channel.writeAndFlush(buf);

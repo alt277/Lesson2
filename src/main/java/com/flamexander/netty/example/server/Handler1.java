@@ -58,11 +58,14 @@ public class Handler1 extends ChannelInboundHandlerAdapter {
                         if (readed == SIGNAL_BYTE_FILE) {
                             out = new BufferedOutputStream(new FileOutputStream("server_storage/" + new String(fileName)));
                             currentState = State.FILE_LENGTH;
+                            System.out.println("Sygnal file ");
                         }
                         if(readed== SIGNAL_BYTE_MESSAGE) {
                             ctx.fireChannelRead(fileName);  // толкаем дальше
                             currentState = State.IDLE;
+                            System.out.println("Sygnal message ");
                         }
+                    System.out.println("Readed = "+readed);
                 }
             }
             if (currentState == State.FILE_LENGTH) {
