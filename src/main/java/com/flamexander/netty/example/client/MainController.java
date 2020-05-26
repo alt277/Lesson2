@@ -1,6 +1,5 @@
 package com.flamexander.netty.example.client;
 
-import com.flamexander.netty.example.server.Filer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +22,9 @@ public class MainController implements Initializable {
     ListView<String> filesList;
     @FXML
       ListView<String> filesList1;
-    public ListView<String> getFilesList1(){
+    @FXML
+    ListView<String> filesList2;
+    public  ListView<String> getFilesList1(){
         return filesList1;
     }
 
@@ -34,12 +35,13 @@ public class MainController implements Initializable {
         CountDownLatch networkStarter = new CountDownLatch(1);
         new Thread(() -> ByteNetwork.getInstance().start(networkStarter)).start();
         try {
-            networkStarter.await();
+            networkStarter.await();   // чтобы подождать открытия соединения
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        refreshLocalFilesList();
-        refreshLocalFilesList1();
+//        refreshLocalFilesList();
+//        refreshLocalFilesList1();
+        refresh();
     }
 
 
@@ -48,48 +50,125 @@ public class MainController implements Initializable {
         if (tfFileName.getLength() > 0) {
 
             if (Files.exists(Paths.get("client_storage/" +tfFileName.getText()) )) {
-                ClientFiler.sendFile(Paths.get("client_storage/"+tfFileName.getText()),
+                ClientSender.sendFile(Paths.get("client_storage/"+tfFileName.getText()),
                         ByteNetwork.getInstance().getCurrentChannel(), future -> {
                     if (!future.isSuccess()) {
                         future.cause().printStackTrace();
-//                Network.getInstance().stop();
+
                     }
                     if (future.isSuccess()) {
-                        System.out.println("Файл успешно передан с клиента");
-//                Network.getInstance().stop();
+                        System.out.println(" Файл передан с клиента"+tfFileName.getText());
+                     new Thread(()->{
+                         try {
+                             Thread.sleep(1000);
+                         } catch (InterruptedException e) {
+                             e.printStackTrace();
+                         }
+                         refresh();
+                     }).start();
+
                     }
                 });
 
                 tfFileName.clear();
-
                 System.out.println("Button Send works");
+
             }
         }
     }
     public void pressOnDownloadBtnGet(ActionEvent actionEvent) throws IOException {
         if (tfFileName.getLength() > 0) {
-
-            if (Files.exists(Paths.get("server_storage/" +tfFileName.getText()) )) {
-                Filer.sendFile(Paths.get("server_storage/"+tfFileName.getText()),
+                ClientSender.getFile( tfFileName.getText(),
                         ByteNetwork.getInstance().getCurrentChannel(), future -> {
                             if (!future.isSuccess()) {
                                 future.cause().printStackTrace();
 
                             }
                             if (future.isSuccess()) {
-                                System.out.println("Файл успешно передан с сервера");
-
+                                System.out.println("Запрос файла передан с клиента" + tfFileName.getText());
+                                new Thread(()->{
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    refresh();
+                                }).start();
                             }
                         });
-
-
                 tfFileName.clear();
-
                 System.out.println("Button Get works");
             }
+    }
+    public void pressOnDownloadBtnOpenAcc(ActionEvent actionEvent) throws IOException {
+        if (tfFileName.getLength() > 0) {
+            ClientSender.openAccess( tfFileName.getText(),
+                    ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                        if (!future.isSuccess()) {
+                            future.cause().printStackTrace();
+                        }
+                        if (future.isSuccess()) {
+                            System.out.println("Запрос файла передан с клиента" + tfFileName.getText());
+                            new Thread(()->{
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                refresh();
+                            }).start();
+                        }
+                    });
+            tfFileName.clear();
+            System.out.println("Button Open Access works");
         }
     }
-
+    public void pressOnDownloadBtnCloseAcc(ActionEvent actionEvent) throws IOException {
+        if (tfFileName.getLength() > 0) {
+            ClientSender.closeAccess( tfFileName.getText(),
+                    ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                        if (!future.isSuccess()) {
+                            future.cause().printStackTrace();
+                        }
+                        if (future.isSuccess()) {
+                            System.out.println("Запрос  передан с клиента" + tfFileName.getText());
+                            new Thread(()->{
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                refresh();
+                            }).start();
+                        }
+                    });
+            tfFileName.clear();
+            System.out.println("Button Open Access works");
+        }
+    }
+    public void pressOnDownloadBtnDelete(ActionEvent actionEvent) throws IOException {
+        if (tfFileName.getLength() > 0) {
+            ClientSender.deleteFile( tfFileName.getText(),
+                    ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                        if (!future.isSuccess()) {
+                            future.cause().printStackTrace();
+                        }
+                        if (future.isSuccess()) {
+                            System.out.println("Запрос файла передан с клиента" + tfFileName.getText());
+                            new Thread(()->{
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                refresh();
+                            }).start();
+                        }
+                    });
+            tfFileName.clear();
+            System.out.println("Button Open Access works");
+        }
+    }
     public void refreshLocalFilesList() {
         Platform.runLater(() -> {
             try {
@@ -116,6 +195,31 @@ public class MainController implements Initializable {
             }
         });
     }
+    public  void refresh() {
+        Platform.runLater(() -> {
+            try {
+                filesList.getItems().clear();
+                Files.list(Paths.get("client_storage"))
+                        .filter(p -> !Files.isDirectory(p))
+                        .map(p -> p.getFileName().toString())
+                        .forEach(o -> filesList.getItems().add(o));
 
+                filesList1.getItems().clear();
+                Files.list(Paths.get("server_storage"))
+                        .filter(p -> !Files.isDirectory(p))
+                        .map(p -> p.getFileName().toString())
+                        .forEach(o -> filesList1.getItems().add(o));
+
+                filesList2.getItems().clear();
+                Files.list(Paths.get("Access_storage"))
+                        .filter(p -> !Files.isDirectory(p))
+                        .map(p -> p.getFileName().toString())
+                        .forEach(o -> filesList2.getItems().add(o));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
 }

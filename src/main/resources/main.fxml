@@ -11,8 +11,15 @@
       <HBox>
          <children>
              <TextField fx:id="tfFileName" focusTraversable="false" prefHeight="25.0" prefWidth="252.0" promptText="Укажите имя файла " HBox.hgrow="ALWAYS" />
-            <Button fx:id="Button3" onAction="#pressOnDownloadBtnGet" prefHeight="25.0" prefWidth="208.0" text="Получить " />
-            <Button fx:id="Button4" onAction="#pressOnDownloadBtnSend" prefHeight="25.0" prefWidth="191.0" text="Отправить" />
+            <Button fx:id="ButtonGet" onAction="#pressOnDownloadBtnGet" prefHeight="25.0" prefWidth="208.0" text="Получить " />
+            <Button fx:id="ButtonSend" onAction="#pressOnDownloadBtnSend" prefHeight="25.0" prefWidth="191.0" text="Отправить" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="ButtonOpenACC" onAction="#pressOnDownloadBtnOpenAcc" prefHeight="25.0" prefWidth="142.0" text="Открыть доступ" />
+            <Button fx:id="ButtonCloseACC" onAction="#pressOnDownloadBtnCloseAcc" prefHeight="25.0" prefWidth="154.0" text="Закрыть досступ" />
+            <Button fx:id="ButtonDelete" onAction="#pressOnDownloadBtnDelete" prefHeight="25.0" prefWidth="106.0" text="Удалить" />
          </children>
       </HBox>
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="client storage" />
@@ -21,5 +28,11 @@
        <ListView fx:id="filesList1" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
 
       </ListView>
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="common storage" />
+      <ScrollPane prefViewportHeight="100.0" prefViewportWidth="400.0">
+         <content>
+            <ListView fx:id="filesList2" nodeOrientation="LEFT_TO_RIGHT" prefHeight="397.0" prefWidth="386.0" />
+         </content>
+      </ScrollPane>
    </children>
 </VBox>
