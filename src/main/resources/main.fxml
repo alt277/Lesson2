@@ -4,22 +4,54 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="rootNode" alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flamexander.netty.example.client.MainController">
+<VBox fx:id="rootNode" alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flamexander.netty.example.client.MainController">
    <children>
 
 
-      <HBox>
+      <HBox fx:id="buttonPanel1">
          <children>
              <TextField fx:id="tfFileName" focusTraversable="false" prefHeight="25.0" prefWidth="252.0" promptText="Укажите имя файла " HBox.hgrow="ALWAYS" />
-            <Button fx:id="Button3" onAction="#pressOnDownloadBtnGet" prefHeight="25.0" prefWidth="208.0" text="Получить " />
-            <Button fx:id="Button4" onAction="#pressOnDownloadBtnSend" prefHeight="25.0" prefWidth="191.0" text="Отправить" />
+            <Button fx:id="ButtonGet" onAction="#pressOnDownloadBtnGet" prefHeight="25.0" prefWidth="208.0" text="Получить " />
+            <Button fx:id="ButtonSend" onAction="#pressOnDownloadBtnSend" prefHeight="25.0" prefWidth="191.0" text="Отправить" />
          </children>
       </HBox>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="client storage" />
-       <ListView fx:id="filesList" VBox.vgrow="ALWAYS" />
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="servrer storage" />
-       <ListView fx:id="filesList1" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
+      <HBox fx:id="buttonPanel2" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="ButtonOpenACC" onAction="#pressOnDownloadBtnOpenAcc" prefHeight="25.0" prefWidth="142.0" text="Открыть доступ" />
+            <Button fx:id="ButtonCloseACC" onAction="#pressOnDownloadBtnCloseAcc" prefHeight="25.0" prefWidth="154.0" text="Закрыть досступ" />
+            <Button fx:id="ButtonDelete" onAction="#pressOnDownloadBtnDelete" prefHeight="25.0" prefWidth="106.0" text="Удалить" />
+         </children>
+      </HBox>
+      <HBox fx:id="authorisePanel">
+         <children>
+            <TextField fx:id="loginField" prefHeight="25.0" prefWidth="178.0" promptText="Логин" HBox.hgrow="ALWAYS" />
+            <PasswordField fx:id="passwordField" onAction="#pressOnDownloadBtnEnter" prefHeight="25.0" prefWidth="167.0" promptText="Пароль" />
+            <Button onAction="#pressOnDownloadBtnEnter" prefHeight="25.0" prefWidth="69.0" text="Войти" />
+         </children>
+      </HBox>
+      <HBox fx:id="infoPanel" prefHeight="392.0" prefWidth="400.0">
+         <children>
+            <VBox prefHeight="350.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="client storage" />
+                   <ListView fx:id="filesList" prefHeight="317.0" prefWidth="130.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            <VBox prefHeight="334.0" prefWidth="212.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="servrer storage" />
+                   <ListView fx:id="filesList1" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="142.0" VBox.vgrow="ALWAYS">
 
       </ListView>
+               </children>
+            </VBox>
+            <VBox prefHeight="334.0" prefWidth="158.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="common storage" />
+                  <ListView fx:id="filesList2" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="137.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
 </VBox>
