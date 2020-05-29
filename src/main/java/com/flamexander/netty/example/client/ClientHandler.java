@@ -12,9 +12,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public enum State {
         IDLE, NAME_LENGTH, NAME, FILE_LENGTH, FILE
     }
-
+MainController controller ;
     private static final byte SIGNAL_BYTE_GET_MESSAGE = 20;
     private static final byte SIGNAL_BYTE_FILE = 25;
+    private static final byte SYGNAL_AUTH_OK=15;
 
     private  State currentState = State.IDLE;
     private  int nextLength;
@@ -25,6 +26,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf buf = ((ByteBuf) msg);
+        MainController controller = new MainController();
         while (buf.readableBytes() > 0) {
             if (currentState == State.IDLE) {
                 byte readed = buf.readByte();
@@ -32,7 +34,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                     currentState = State.NAME_LENGTH;
                     receivedFileLength = 0L;
                     System.out.println("STATE: Start file receiving");
-                } else  {
+                }else if(readed==SYGNAL_AUTH_OK) {
+                    controller.setAuthorized(true);
+                }
+                else  {
                     System.out.println("ERROR: Invalid first byte - " + readed);
                 }
             }

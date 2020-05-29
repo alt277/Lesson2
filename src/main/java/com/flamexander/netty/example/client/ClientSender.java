@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ClientSender {
 
@@ -22,9 +23,11 @@ public class ClientSender {
 
     private static final String GET_FILE= "GET?";
     private static String DELETE_FILE= "DEL?";
-    private static String OPEN_ACCESS= "OP/?";
-    private static String CLOSE_ASSESS= "CL/?";
-    private static String SYNCHRONIZE= "SYN";
+    private static String OPEN_ACCESS= "OPE?";
+    private static String CLOSE_ASSESS= "CLO?";
+    private static String SYNCHRONIZE= "SYN?";
+    private static String AUTHORISE= "AUT?";
+
 
 
 
@@ -88,8 +91,10 @@ public class ClientSender {
 
     }
     public static void getFile( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
-          String command=GET_FILE+filename;
-          sendCommand(command,channel,finishListener);
+        if (Files.notExists(Paths.get("client_storage/" + filename))) {
+            String command = GET_FILE + filename;
+            sendCommand(command, channel, finishListener);
+        }
     }
     public static void deleteFile( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
         String command=DELETE_FILE+ filename;
@@ -103,7 +108,10 @@ public class ClientSender {
         String command=CLOSE_ASSESS+filename;
         sendCommand(command,channel,finishListener);
     }
-
+    public static void authorizeCMD( String filename, Channel channel, ChannelFutureListener finishListener) throws IOException {
+        String command=AUTHORISE+filename;
+        sendCommand(command,channel,finishListener);
+    }
     public static void sendCommand(String command,  Channel channel, ChannelFutureListener finishListener) throws IOException {
      //  String mes=command+path.getFileName().toString();
         ByteBuf buf = null;

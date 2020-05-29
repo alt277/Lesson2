@@ -5,7 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,9 +17,13 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CountDownLatch;
 
 public class MainController implements Initializable {
+
+    public  boolean isAuthorized;
+    @FXML TextField     loginField;
+    @FXML PasswordField passwordField;
+
     @FXML
     TextField tfFileName;
-
     @FXML
     ListView<String> filesList;
     @FXML
@@ -28,6 +34,35 @@ public class MainController implements Initializable {
         return filesList1;
     }
 
+    @FXML HBox   buttonPanel1;
+    @FXML HBox   buttonPanel2;
+    @FXML HBox   authorisePanel;
+    @FXML HBox   infoPanel;
+
+    public void setAuthorized(boolean isAuthorized){
+       // this.isAuthorized=isAuthorized;
+        if(!isAuthorized){
+            authorisePanel.setVisible(true);
+            authorisePanel.setManaged(true);
+            buttonPanel1.setVisible(false);
+            buttonPanel1.setManaged(false);
+            buttonPanel2.setVisible(false);
+            buttonPanel2.setManaged(false);
+            infoPanel.setVisible(false);
+            infoPanel.setManaged(false);
+        }
+        else {
+            authorisePanel.setVisible(false);
+            authorisePanel.setManaged(false);
+            buttonPanel1.setVisible(true);
+            buttonPanel1.setManaged(true);
+            buttonPanel2.setVisible(true);
+            buttonPanel2.setManaged(true);
+            infoPanel.setVisible(true);
+            infoPanel.setManaged(true);
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -36,12 +71,12 @@ public class MainController implements Initializable {
         new Thread(() -> ByteNetwork.getInstance().start(networkStarter)).start();
         try {
             networkStarter.await();   // чтобы подождать открытия соединения
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        refreshLocalFilesList();
-//        refreshLocalFilesList1();
-        refresh();
+           setAuthorized(false);
+        refreshAll();
     }
 
 
@@ -64,7 +99,7 @@ public class MainController implements Initializable {
                          } catch (InterruptedException e) {
                              e.printStackTrace();
                          }
-                         refresh();
+                         refreshAll();
                      }).start();
 
                     }
@@ -92,7 +127,7 @@ public class MainController implements Initializable {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
-                                    refresh();
+                                    refreshAll();
                                 }).start();
                             }
                         });
@@ -115,7 +150,7 @@ public class MainController implements Initializable {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                refresh();
+                                refreshAll();
                             }).start();
                         }
                     });
@@ -138,7 +173,7 @@ public class MainController implements Initializable {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                refresh();
+                                refreshAll();
                             }).start();
                         }
                     });
@@ -161,7 +196,7 @@ public class MainController implements Initializable {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                refresh();
+                                refreshAll();
                             }).start();
                         }
                     });
@@ -195,7 +230,7 @@ public class MainController implements Initializable {
             }
         });
     }
-    public  void refresh() {
+    public  void refreshAll() {
         Platform.runLater(() -> {
             try {
                 filesList.getItems().clear();
@@ -221,5 +256,25 @@ public class MainController implements Initializable {
             }
         });
     }
+
+    public void pressOnDownloadBtnEnter(ActionEvent actionEvent) throws IOException {
+        if ((loginField.getLength() > 0) && (passwordField.getLength() > 0) ) {
+            String message=loginField.getText()+"?"+passwordField.getText();
+            ClientSender.authorizeCMD( message,
+                    ByteNetwork.getInstance().getCurrentChannel(), future -> {
+                        if (!future.isSuccess()) {
+                            future.cause().printStackTrace();
+                        }
+                        if (future.isSuccess()) {
+                            System.out.println("Запрос авторизации передан с клиента");
+
+                        }
+                    });
+            loginField.clear();
+            passwordField.clear();
+            System.out.println("Button Enter works");
+        }
+    }
+
 
 }

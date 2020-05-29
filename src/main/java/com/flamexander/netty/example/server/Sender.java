@@ -38,5 +38,13 @@ public class Sender {
             transferOperationFuture.addListener(finishListener);
         }
     }
+    public static void sendOK( Channel channel) throws IOException {
 
+
+        ByteBuf buf = null;
+        buf = ByteBufAllocator.DEFAULT.directBuffer(1);
+        buf.writeByte((byte)15);
+        channel.writeAndFlush(buf);
+
+    }
 }
