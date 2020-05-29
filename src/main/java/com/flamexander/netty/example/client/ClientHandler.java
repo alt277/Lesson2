@@ -1,15 +1,12 @@
 package com.flamexander.netty.example.client;
 
 
-import com.flamexander.netty.example.server.Commander;
-import com.flamexander.netty.example.server.Filer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     public enum State {
@@ -19,12 +16,12 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private static final byte SIGNAL_BYTE_GET_MESSAGE = 20;
     private static final byte SIGNAL_BYTE_FILE = 25;
 
-    private static State currentState = State.IDLE;
-    private static int nextLength;
-    private static long fileLength;
-    private static long receivedFileLength;
+    private  State currentState = State.IDLE;
+    private  int nextLength;
+    private  long fileLength;
+    private long receivedFileLength;
     //  private BufferedOutputStream out;
-    private static BufferedOutputStream out;
+    private BufferedOutputStream out;
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         ByteBuf buf = ((ByteBuf) msg);
@@ -35,7 +32,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                     currentState = State.NAME_LENGTH;
                     receivedFileLength = 0L;
                     System.out.println("STATE: Start file receiving");
-                } else {
+                } else  {
                     System.out.println("ERROR: Invalid first byte - " + readed);
                 }
             }
@@ -87,6 +84,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         cause.printStackTrace();
         ctx.close();
+        System.out.println(" ошибки при передаче в хендлере клиента");
     }
 
 

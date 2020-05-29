@@ -9,12 +9,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class ProtoServer {
+public class ServerVariant2 {
 
-//    private static Channel currentChannel;
-//    public static Channel getCurrentChannel() {
-//        return currentChannel;
-//    }
+    private static Channel currentChannel;
+    public static Channel getCurrentChannel() {
+        return currentChannel;
+    }
 
     public void run() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -26,8 +26,8 @@ public class ProtoServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                         @Override
                         public void initChannel(SocketChannel channel) throws Exception {
-                            channel.pipeline().addLast(new ProtoHandler());
-   //                         currentChannel=channel;
+                            channel.pipeline().addLast(new InHandler(), new  Handler2());
+                           currentChannel=channel;
                         }
                     });
                     // .childOption(ChannelOption.SO_KEEPALIVE, true);
@@ -41,6 +41,6 @@ public class ProtoServer {
     }
 
     public static void main(String[] args) throws Exception {
-        new ProtoServer().run();
+        new ServerVariant2().run();
     }
 }
