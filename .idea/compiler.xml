@@ -12,8 +12,10 @@
         <module name="netty-serial_STW" />
         <module name="netty-proto-ST - 4 - W - Copy" />
         <module name="netty-proto-ST" />
-        <module name="netty-proto-ST - 4" />
         <module name="netty-proto-ST - 5- HW" />
+        <module name="netty-proto-ST - 6 -27.05" />
+        <module name="netty-proto-ST - 4" />
+        <module name="netty-proto-ST - 7-W" />
         <module name="netty-file-transfer-lesson1" />
         <module name="netty-file-transfer" />
         <module name="netty-serial_STW -2" />

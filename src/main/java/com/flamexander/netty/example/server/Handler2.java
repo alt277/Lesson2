@@ -6,9 +6,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.*;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,8 +19,8 @@ public class Handler2 extends ChannelInboundHandlerAdapter {
     private BufferedOutputStream out;
     private static final String GET_FILE= "GET";
     private static final String DELETE_FILE= "DEL";
-    private static final String OPEN_ACCESS= "OP/";
-    private static final String CLOSE_ASSESS= "CL/";
+    private static final String OPEN_ACCESS= "OPE";
+    private static final String CLOSE_ASSESS= "CLO";
     private static final String SYNCHRONIZE= "SYN";
 //    private  BufferedInputStream in;
 
@@ -57,21 +55,36 @@ public class Handler2 extends ChannelInboundHandlerAdapter {
         }
         if (message.startsWith(DELETE_FILE)) {
             Files.deleteIfExists(Paths.get("server_storage/"+ fileName));
+            Files.deleteIfExists(Paths.get("Access_storage/"+ fileName));
             System.out.println("Блок delete!");
         }
         if (message.startsWith(OPEN_ACCESS)) {
+            System.out.println(" блок откр доступ ");
             if (Files.exists(Paths.get("server_storage/" + fileName))) {
-                ByteBuf buf = null;
-                byte[] filenameBytes = Paths.get("server_storage/" + fileName).getFileName().toString().getBytes(StandardCharsets.UTF_8);
+
+                int size=(int)Files.size(Paths.get("server_storage/" + fileName));
+                byte[] arr1=new byte[size];
+                in = new BufferedInputStream(new FileInputStream("server_storage/" + fileName));
+                in.read(arr1);
                 out = new BufferedOutputStream(new FileOutputStream("Access_storage/" + fileName));
-                out.write(filenameBytes);
+                out.write(arr1);
+                in.close();
+                out.close();
+
+           //     Files.write(Paths.get("server_storage/" + fileName)), ;
+            //    FileRegion region = new DefaultFileRegion(Paths.get("server_storage/" + fileName), 0, Files.size(path));
+             //   out.write(region);
                 System.out.println(" блок откр доступ ");
             }
         }
 
         if (message.startsWith(CLOSE_ASSESS)) {
-            Files.deleteIfExists(Paths.get("Access_storage/"+ fileName));
-            System.out.println("Блок закрыть доступ!");
+            System.out.println(" блок закр доступ ");
+//            if (Files.exists(Paths.get("Access_storage/" + fileName))) {
+//                Files.delete(Paths.get("Access_storage/" + fileName));
+//                System.out.println(" блок закр доступ ");
+//            }
+            Files.deleteIfExists(Paths.get("Access_storage/" + fileName));
         }
 
 

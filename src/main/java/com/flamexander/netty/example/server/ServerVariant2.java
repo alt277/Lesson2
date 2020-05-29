@@ -26,7 +26,7 @@ public class ServerVariant2 {
                     .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                         @Override
                         public void initChannel(SocketChannel channel) throws Exception {
-                            channel.pipeline().addLast(new InHandler());
+                            channel.pipeline().addLast(new InHandler(), new  Handler2());
                            currentChannel=channel;
                         }
                     });

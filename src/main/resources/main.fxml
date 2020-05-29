@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="rootNode" alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flamexander.netty.example.client.MainController">
+<VBox fx:id="rootNode" alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="400.0" style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.flamexander.netty.example.client.MainController">
    <children>
 
 
@@ -22,17 +22,29 @@
             <Button fx:id="ButtonDelete" onAction="#pressOnDownloadBtnDelete" prefHeight="25.0" prefWidth="106.0" text="Удалить" />
          </children>
       </HBox>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="client storage" />
-       <ListView fx:id="filesList" VBox.vgrow="ALWAYS" />
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="servrer storage" />
-       <ListView fx:id="filesList1" nodeOrientation="LEFT_TO_RIGHT" VBox.vgrow="ALWAYS">
+      <HBox prefHeight="392.0" prefWidth="400.0">
+         <children>
+            <VBox prefHeight="350.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="client storage" />
+                   <ListView fx:id="filesList" prefHeight="317.0" prefWidth="130.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            <VBox prefHeight="334.0" prefWidth="212.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="servrer storage" />
+                   <ListView fx:id="filesList1" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="142.0" VBox.vgrow="ALWAYS">
 
       </ListView>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="common storage" />
-      <ScrollPane prefViewportHeight="100.0" prefViewportWidth="400.0">
-         <content>
-            <ListView fx:id="filesList2" nodeOrientation="LEFT_TO_RIGHT" prefHeight="397.0" prefWidth="386.0" />
-         </content>
-      </ScrollPane>
+               </children>
+            </VBox>
+            <VBox prefHeight="334.0" prefWidth="158.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="319.0" text="common storage" />
+                  <ListView fx:id="filesList2" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="137.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
 </VBox>
