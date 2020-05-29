@@ -80,10 +80,10 @@ public class Handler2 extends ChannelInboundHandlerAdapter {
 
         if (message.startsWith(CLOSE_ASSESS)) {
             System.out.println(" блок закр доступ ");
-//            if (Files.exists(Paths.get("Access_storage/" + fileName))) {
-//                Files.delete(Paths.get("Access_storage/" + fileName));
-//                System.out.println(" блок закр доступ ");
-//            }
+            if (Files.exists(Paths.get("Access_storage/" + fileName))) {
+                Files.delete(Paths.get("Access_storage/" + fileName));
+                System.out.println(" блок закр доступ ");
+            }
             Files.deleteIfExists(Paths.get("Access_storage/" + fileName));
         }
 
